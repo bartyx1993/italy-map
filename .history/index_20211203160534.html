@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.map {fill: #666; stroke: #f5f5f5;}
+.border_map {stroke: red; stroke-width: 3px;}
+.torino_map {fill: #fff; stroke: blue; stroke-width: 3px;}
+</style>
+<html>
+<body>
+<!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
+<script src="http://d3js.org/d3.v4.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<script>
+var width = 500,
+    height = 500;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+    var data = d3.map();
+
+    d3.json('./morti_stranieri.json', function(error, morti) {
+      const dati = morti.filter((record) => record.canno === '2010').forEach(m => (data.set(m.ccodice_istat_regione, +m.cmorti___maschi + +m.cmorti___femmine) ))
+    })
+
+    console.log(d3)
+    var colorScale = d3.scaleThreshold()
+        .domain([1000, 2000, 3000, 4000, 5000,6000,7000,8000,9000,10000 ])
+        .range(d3.schemeBlues[9]);
+
+
+    
+
+    d3.json("./italia.json", function(error, it) {
+    
+    var subunits = topojson.feature(it, it.objects.regions);
+      console.log(subunits)
+    
+    
+    
+    
+      var projection = d3.geoMercator().fillExtent([[0,0],[500,500]],subunits)
+      // .scale(1000)
+      // .center([15, 40])
+      // .translate([width / 2, height / 2]);    
+    
+    var path = d3.geoPath()
+        .projection(projection);
+
+
+    let mouseOver = function (d) {
+      d3.selectAll(".Regione")
+        .transition()
+        .duration(200)
+        .style("opacity", .5)
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .style("opacity", 1)
+        .style("stroke", "black")
+    }
+
+    let mouseLeave = function (d) {
+      d3.selectAll(".Regione")
+        .transition()
+        .duration(200)
+        .style("opacity", .8)
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .style("stroke", "transparent")
+    }
+
+
+
+    svg.selectAll("path")
+      .data(topojson.feature(it, it.objects.regions).features)
+      .enter().append("path")
+      .attr("class", function (d) { return d.properties.reg_name + ' Regione' })
+      .attr("d", path)
+       .style("stroke", "transparent")
+      // .attr("class", function (d) { return "Regione" })
+      .attr("fill", function (d) {
+        console.log(d)
+        d.total = data.get(d.properties.reg_istat_code) || 0;
+        return colorScale(d.total * 10);
+      })
+      .style("opacity", .8)
+      .on("mouseover", mouseOver)
+      .on("mouseleave", mouseLeave)
+
+
+
+    // draw border with sea
+   // svg.append("path")
+   // .datum(topojson.mesh(it, it.objects.sub, function(a, b) { return a === b ; }))
+   // .attr("class", "border_map")
+   // .attr("d", path);
+
+    // draw all the features together (no different styles)
+    // svg.append("path")
+    // .datum(subunits)
+    // .attr("class", "map")
+    // .attr("d", path);
+
+    // draw and style any feature at time
+    // draw TORINO border (i.e. the border of a given feature)
+//    svg.append("path")
+  //  .datum(topojson.mesh(it, it.objects.sub, function(a, b) { return b.id === 'TORINO' || a.id === 'TORINO'; }))
+   // .attr("class", "torino_map")
+   // .attr("d", path);
+
+
+});
+
+</script>
+</body>
+</html>
