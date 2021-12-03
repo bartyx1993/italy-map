@@ -8,7 +8,7 @@ https://www.npmjs.com/package/http-server
 npx http-server -p 8008
 ```
 
-#Link utili
+# Link utili
 
 Documentazione d3
 https://github.com/d3/d3/wiki
@@ -41,7 +41,7 @@ Dati vari:
 https://github.com/holtzy/D3-graph-gallery/tree/master/DATA
 
 
-#Codice di esempio:
+# Codice di esempio:
 
 Spherical Mercator:
 https://bl.ocks.org/mbostock/3757132 
