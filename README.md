@@ -5,6 +5,7 @@ Esempio di mappa dell'Italia con D3.js
 HTTP server
 https://www.npmjs.com/package/http-server
 ```
+npm install
 npx http-server -p 8008
 ```
 
