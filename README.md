@@ -11,6 +11,9 @@ npx http-server -p 8008
 
 # Link utili
 
+Tooltip on hover
+http://bl.ocks.org/lwhitaker3/e8090246a20d9515789b
+
 Documentazione d3
 https://github.com/d3/d3/wiki
 
